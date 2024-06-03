@@ -5,15 +5,15 @@ configfile: "config.yaml"
 
 rule all:
     input:
-    	config["Ldatadir"]+"/Nano_Raw_Report",
-    	config["Ldatadir"]+"/porechop_output.fastq.gz",
-    	config["Ldatadir"]+"/Nano_Trimmed_Report",
-    	config["Ldatadir"]+"/Assemblies/Flye/assembly.fasta",
-    	config["Ldatadir"]+"/Quast_Results/QA_1",
-    	config["Ldatadir"]+"/Busco_Results/QA_1",
-    	config["Ldatadir"]+"/Assemblies/Medaka_Results/consensus.fasta",
-    	config["Ldatadir"]+"/Quast_Results/QA_2",
-	config["Ldatadir"]+"/Busco_Results/QA_2"
+        config["Ldatadir"]+"/Nano_Raw_Report",
+        config["Ldatadir"]+"/porechop_output.fastq.gz",
+        config["Ldatadir"]+"/Nano_Trimmed_Report",
+        config["Ldatadir"]+"/Assemblies/Flye/assembly.fasta",
+        config["Ldatadir"]+"/Quast_Results/QA_1",
+        config["Ldatadir"]+"/Busco_Results/QA_1",
+        config["Ldatadir"]+"/Assemblies/Medaka_Results/consensus.fasta",
+        config["Ldatadir"]+"/Quast_Results/QA_2",
+        config["Ldatadir"]+"/Busco_Results/QA_2"
 
 
 rule nanoq_c:
@@ -24,7 +24,7 @@ rule nanoq_c:
     params:
         Trimmed = False
     threads:
-	int(int(config["Available_Cores"]) * 0.1)
+        int(int(config["Available_Cores"]) * 0.1)
     group : "1"
     conda:
         "LQTQ.yml"
@@ -56,7 +56,7 @@ rule nanoq_c_t:
     params:
         Trimmed = True
     threads:
-	int(int(config["Available_Cores"]) * 0.1)
+        int(int(config["Available_Cores"]) * 0.1)
     group : "1"
     conda:
         "LQTQ.yml"
@@ -75,7 +75,7 @@ rule FlyeAssGenie:
     conda:
         "FlyeAss.yml"
     threads:
-	int(int(config["Available_Cores"]) *1)
+        int(int(config["Available_Cores"]) *1)
     params:
         ShortR = config["Sdatadir"],
         GSE = config["GSE"],
@@ -96,7 +96,7 @@ rule QA_1:
         Lineage = config["LINEAGE"],
         SP = config["SP"]
     threads:
-	int(int(config["Available_Cores"]) * 0.4)
+        int(int(config["Available_Cores"]) * 0.4)
     group : "2"
     conda:
         "QAssembly.yml"
@@ -114,7 +114,7 @@ rule Polish:
     conda:
         "Polishing.yml"
     threads:
-	int(int(config["Available_Cores"]) * 0.5)
+        int(int(config["Available_Cores"]) * 0.5)
     group : "2"
     params:
         i = config["ITER"]
@@ -136,7 +136,7 @@ rule QA_2:
     conda:
         "QAssembly.yml"
     threads:
-	int(int(config["Available_Cores"]) * 1)
+        int(int(config["Available_Cores"]) * 1)
     script:
         "QAssembly.py"
 
