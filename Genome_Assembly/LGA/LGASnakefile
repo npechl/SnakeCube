@@ -2,7 +2,6 @@
 
 configfile: "config.yaml"
 
-
 rule all:
     input:
         config["Ldatadir"]+"/Nano_Raw_Report",
@@ -14,7 +13,6 @@ rule all:
         config["Ldatadir"]+"/Assemblies/Medaka_Results/consensus.fasta",
         config["Ldatadir"]+"/Quast_Results/QA_2",
         config["Ldatadir"]+"/Busco_Results/QA_2"
-
 
 rule nanoq_c:
     input:
@@ -31,8 +29,6 @@ rule nanoq_c:
     script:
         "nanoqc.py"
 
-
-
 rule trimming_l:
     input:
         config["Ldatadir"]
@@ -45,8 +41,6 @@ rule trimming_l:
         "LQTQ.yml"
     script:
         "trim.py"
-
-
 
 rule nanoq_c_t:
     input:
@@ -62,9 +56,6 @@ rule nanoq_c_t:
         "LQTQ.yml"
     script:
         "nanoqc.py"
-
-
-
 
 rule FlyeAssGenie:
     input:
@@ -83,9 +74,6 @@ rule FlyeAssGenie:
     script:
         "FlyeAssGenie.py"
 
-
-
-
 rule QA_1:
     input:
         config["Ldatadir"]+"/Assemblies/Flye/assembly.fasta"
@@ -103,8 +91,6 @@ rule QA_1:
     script:
         "QAssembly.py"
 
-
-
 rule Polish:
     input:
         config["Ldatadir"]+"/Assemblies/Flye/assembly.fasta",
@@ -121,9 +107,6 @@ rule Polish:
     script:
         "Polishing.py"
 
-
-
-
 rule QA_2:
     input:
         config["Ldatadir"]+"/Assemblies/Medaka_Results/consensus.fasta"
@@ -139,4 +122,3 @@ rule QA_2:
         int(int(config["Available_Cores"]) * 1)
     script:
         "QAssembly.py"
-
