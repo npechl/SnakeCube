@@ -1,6 +1,6 @@
 
 
-configfile: "config.yaml"
+configfile: "Genome_Assembly/config.yaml"
 
 rule all:
     input:

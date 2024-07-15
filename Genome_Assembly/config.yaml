@@ -19,10 +19,10 @@
      #e.g.: "Sample_01_R1.fastq" for forward, "Sample_01_R2.fastq" for reverse
 
 
-Available_Cores: "20" #The number of available cores in the environment you are gonna run the image. The optimity is accomplished when running with cpus multiples of ten (10,20,30 etc.).
+Available_Cores: "2" #The number of available cores in the environment you are gonna run the image. The optimity is accomplished when running with cpus multiples of ten (10,20,30 etc.).
 
-Short_Reads: "y" # Will you use short reads for the build of your assembly? (str,"y"|"n") If "y", please fill the ABOUT SHORT READS section below. If "n", please provide an GSE estimation.
-GSE: " " #Genome Size Estimation, mandatory if you are not going to use short reads in your analysis. In g. e.g.:"0.8g"
+Short_Reads: "n" # Will you use short reads for the build of your assembly? (str,"y"|"n") If "y", please fill the ABOUT SHORT READS section below. If "n", please provide an GSE estimation.
+GSE: "0.000008g" #Genome Size Estimation, mandatory if you are not going to use short reads in your analysis. In g. e.g.:"0.8g"
 
 
 
@@ -42,7 +42,7 @@ AVGQUAL: "30" # Drop the read if the average quality is below the specified leve
 
 ### ABOUT LONG READS
 
-Ldatadir: "raw_data/FastqFiles/MinION" #The dir containing your long raw data (type:str). Give your paths RELATIVELY to the directory you have copied the image into (the folder of the image is the starting point). Do not add "/" at the start and end of the string.
+Ldatadir: "data/sub1" #The dir containing your long raw data (type:str). Give your paths RELATIVELY to the directory you have copied the image into (the folder of the image is the starting point). Do not add "/" at the start and end of the string.
 
 ITER: "2" #Iterations of Racon Polishing (str)
 
