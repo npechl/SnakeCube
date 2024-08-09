@@ -1,0 +1,151 @@
+
+
+configfile: "../config.yaml"
+
+
+rule all:
+    input:
+        config["Ldatadir"] + "/Nano_Raw_Report",
+        config["Ldatadir"] + "/porechop_output.fastq.gz",
+        config["Ldatadir"] + "/Nano_Trimmed_Report",
+        config["Ldatadir"] + "/Assemblies/Flye/assembly.fasta",
+        config["Ldatadir"] + "/Quast_Results/QA_1",
+        config["Ldatadir"] + "/Busco_Results/QA_1",
+        config["Ldatadir"] + "/Assemblies/Medaka_Results/consensus.fasta",
+        config["Ldatadir"] + "/Quast_Results/QA_2",
+        config["Ldatadir"] + "/Busco_Results/QA_2"
+
+
+rule nanoq_c:
+    input:
+        config["Ldatadir"]
+    output:
+        directory(config["Ldatadir"] + "/Nano_Raw_Report")
+    log:
+        stdout="logs/nanoq_c.stdout",
+        stderr="logs/nanoq_c.stderr"
+    params:
+        Trimmed=False
+    threads: int(int(config["Available_Cores"]) * 0.1)
+    group:
+        "1"
+    conda:
+        "envs/LQTQ.yml"
+    script:
+        "scripts/nanoqc.py > {log.stdout} 2> {log.stderr}"
+
+
+rule trimming_l:
+    input:
+        config["Ldatadir"]
+    output:
+        config["Ldatadir"] + "/porechop_output.fastq.gz"
+    log:
+        stdout="logs/trimming_l.stdout",
+        stderr="logs/trimming_l.stderr"
+    threads: int(int(config["Available_Cores"]) * 0.8)
+    group:
+        "1"
+    conda:
+        "envs/LQTQ.yml"
+    script:
+        "scripts/trim.py > {log.stdout} 2> {log.stderr}"
+
+
+rule nanoq_c_t:
+    input:
+        config["Ldatadir"] + "/porechop_output.fastq.gz"
+    output:
+        directory(config["Ldatadir"] + "/Nano_Trimmed_Report")
+    log:
+        stdout="logs/nanoq_c_t.stdout",
+        stderr="logs/nanoq_c_t.stderr"
+    params:
+        Trimmed=True,
+    threads: int(int(config["Available_Cores"]) * 0.1)
+    group:
+        "1"
+    conda:
+        "envs/LQTQ.yml"
+    script:
+        "scripts/nanoqc.py > {log.stdout} 2> {log.stderr}"
+
+
+rule FlyeAssGenie:
+    input:
+        config["Ldatadir"],
+        config["Ldatadir"] + "/porechop_output.fastq.gz"
+    output:
+        config["Ldatadir"] + "/Assemblies/Flye/assembly.fasta",
+    log:
+        stdout="logs/FlyeAssGenie.stdout",
+        stderr="logs/FlyeAssGenie.stderr"
+    conda:
+        "envs/FlyeAss.yml"
+    threads: int(int(config["Available_Cores"]) * 1)
+    params:
+        ShortR=config["Sdatadir"],
+        GSE=config["GSE"],
+        S=config["Short_Reads"]
+    script:
+        "scripts/FlyeAssGenie.py > {log.stdout} 2> {log.stderr}"
+
+
+rule QA_1:
+    input:
+        config["Ldatadir"] + "/Assemblies/Flye/assembly.fasta"
+    output:
+        directory(config["Ldatadir"] + "/Quast_Results/QA_1"),
+        directory(config["Ldatadir"] + "/Busco_Results/QA_1")
+    log:
+        stdout="logs/QA_1.stdout",
+        stderr="logs/QA_1.stderr"
+    params:
+        Lineage=config["LINEAGE"],
+        SP=config["SP"]
+    threads: int(int(config["Available_Cores"]) * 0.4)
+    group:
+        "2"
+    conda:
+        "envs/QAssembly.yml"
+    script:
+        "scripts/QAssembly.py > {log.stdout} 2> {log.stderr}"
+
+
+rule Polish:
+    input:
+        config["Ldatadir"] + "/Assemblies/Flye/assembly.fasta",
+        config["Ldatadir"] + "/porechop_output.fastq.gz"
+    output:
+        config["Ldatadir"] + "/Assemblies/Medaka_Results/consensus.fasta"
+    log:
+        stdout="logs/Polish.stdout",
+        stderr="logs/Polish.stderr"
+    conda:
+        "envs/Polishing.yml"
+    threads: int(int(config["Available_Cores"]) * 0.5)
+    group:
+        "2"
+    params:
+        i=config["ITER"]
+    script:
+        "scripts/Polishing.py > {log.stdout} 2> {log.stderr}"
+
+
+rule QA_2:
+    input:
+        config["Ldatadir"] + "/Assemblies/Medaka_Results/consensus.fasta"
+    output:
+        directory(config["Ldatadir"] + "/Quast_Results/QA_2"),
+        directory(config["Ldatadir"] + "/Busco_Results/QA_2")
+    log:
+        stdout="logs/QA_2.stdout",
+        stderr="logs/QA_2.stderr"
+    params:
+        Lineage=config["LINEAGE"],
+        SP=config["SP"]
+    conda:
+        "envs/QAssembly.yml"
+    threads: int(int(config["Available_Cores"]) * 1)
+    script:
+        "scripts/QAssembly.py > {log.stdout} 2> {log.stderr}"
