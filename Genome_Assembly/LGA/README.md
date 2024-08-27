@@ -8,9 +8,9 @@ This is a Snakemake workflow for long read genome assembly.
 
 **Snakemake**: Ensure you have Snakemake installed. You can install it via conda:
 
-    ```bash
-    conda install -c bioconda snakemake
-    ```
+```bash
+conda install -c bioconda snakemake
+```
 
 ### Clone the Repository
 
