@@ -21,9 +21,9 @@ rule nanoq_c:
         config["Ldatadir"]
     output:
         directory(config["Ldatadir"] + "/Nano_Raw_Report")
-    log:
-        stdout="logs/nanoq_c.stdout",
-        stderr="logs/nanoq_c.stderr"
+    # log:
+    #     stdout="logs/nanoq_c.stdout",
+    #     stderr="logs/nanoq_c.stderr"
     params:
         Trimmed=False
     threads: int(int(config["Available_Cores"]) * 0.1)
@@ -32,7 +32,7 @@ rule nanoq_c:
     conda:
         "envs/LQTQ.yml"
     script:
-        "scripts/nanoqc.py > {log.stdout} 2> {log.stderr}"
+        "scripts/nanoqc.py"
 
 
 rule trimming_l:
@@ -40,16 +40,16 @@ rule trimming_l:
         config["Ldatadir"]
     output:
         config["Ldatadir"] + "/porechop_output.fastq.gz"
-    log:
-        stdout="logs/trimming_l.stdout",
-        stderr="logs/trimming_l.stderr"
+    # log:
+    #     stdout="logs/trimming_l.stdout",
+    #     stderr="logs/trimming_l.stderr"
     threads: int(int(config["Available_Cores"]) * 0.8)
     group:
         "1"
     conda:
         "envs/LQTQ.yml"
     script:
-        "scripts/trim.py > {log.stdout} 2> {log.stderr}"
+        "scripts/trim.py"
 
 
 rule nanoq_c_t:
@@ -57,9 +57,9 @@ rule nanoq_c_t:
         config["Ldatadir"] + "/porechop_output.fastq.gz"
     output:
         directory(config["Ldatadir"] + "/Nano_Trimmed_Report")
-    log:
-        stdout="logs/nanoq_c_t.stdout",
-        stderr="logs/nanoq_c_t.stderr"
+    # log:
+    #     stdout="logs/nanoq_c_t.stdout",
+    #     stderr="logs/nanoq_c_t.stderr"
     params:
         Trimmed=True,
     threads: int(int(config["Available_Cores"]) * 0.1)
@@ -68,7 +68,7 @@ rule nanoq_c_t:
     conda:
         "envs/LQTQ.yml"
     script:
-        "scripts/nanoqc.py > {log.stdout} 2> {log.stderr}"
+        "scripts/nanoqc.py"
 
 
 rule FlyeAssGenie:
@@ -77,9 +77,9 @@ rule FlyeAssGenie:
         config["Ldatadir"] + "/porechop_output.fastq.gz"
     output:
         config["Ldatadir"] + "/Assemblies/Flye/assembly.fasta",
-    log:
-        stdout="logs/FlyeAssGenie.stdout",
-        stderr="logs/FlyeAssGenie.stderr"
+    # log:
+    #     stdout="logs/FlyeAssGenie.stdout",
+    #     stderr="logs/FlyeAssGenie.stderr"
     conda:
         "envs/FlyeAss.yml"
     threads: int(int(config["Available_Cores"]) * 1)
@@ -88,7 +88,7 @@ rule FlyeAssGenie:
         GSE=config["GSE"],
         S=config["Short_Reads"]
     script:
-        "scripts/FlyeAssGenie.py > {log.stdout} 2> {log.stderr}"
+        "scripts/FlyeAssGenie.py"
 
 
 rule QA_1:
@@ -97,9 +97,9 @@ rule QA_1:
     output:
         directory(config["Ldatadir"] + "/Quast_Results/QA_1"),
         directory(config["Ldatadir"] + "/Busco_Results/QA_1")
-    log:
-        stdout="logs/QA_1.stdout",
-        stderr="logs/QA_1.stderr"
+    # log:
+    #     stdout="logs/QA_1.stdout",
+    #     stderr="logs/QA_1.stderr"
     params:
         Lineage=config["LINEAGE"],
         SP=config["SP"]
@@ -109,7 +109,7 @@ rule QA_1:
     conda:
         "envs/QAssembly.yml"
     script:
-        "scripts/QAssembly.py > {log.stdout} 2> {log.stderr}"
+        "scripts/QAssembly.py"
 
 
 rule Polish:
@@ -118,9 +118,9 @@ rule Polish:
         config["Ldatadir"] + "/porechop_output.fastq.gz"
     output:
         config["Ldatadir"] + "/Assemblies/Medaka_Results/consensus.fasta"
-    log:
-        stdout="logs/Polish.stdout",
-        stderr="logs/Polish.stderr"
+    # log:
+    #     stdout="logs/Polish.stdout",
+    #     stderr="logs/Polish.stderr"
     conda:
         "envs/Polishing.yml"
     threads: int(int(config["Available_Cores"]) * 0.5)
@@ -129,7 +129,7 @@ rule Polish:
     params:
         i=config["ITER"]
     script:
-        "scripts/Polishing.py > {log.stdout} 2> {log.stderr}"
+        "scripts/Polishing.py"
 
 
 rule QA_2:
@@ -138,9 +138,9 @@ rule QA_2:
     output:
         directory(config["Ldatadir"] + "/Quast_Results/QA_2"),
         directory(config["Ldatadir"] + "/Busco_Results/QA_2")
-    log:
-        stdout="logs/QA_2.stdout",
-        stderr="logs/QA_2.stderr"
+    # log:
+    #     stdout="logs/QA_2.stdout",
+    #     stderr="logs/QA_2.stderr"
     params:
         Lineage=config["LINEAGE"],
         SP=config["SP"]
@@ -148,4 +148,4 @@ rule QA_2:
         "envs/QAssembly.yml"
     threads: int(int(config["Available_Cores"]) * 1)
     script:
-        "scripts/QAssembly.py > {log.stdout} 2> {log.stderr}"
+        "scripts/QAssembly.py"

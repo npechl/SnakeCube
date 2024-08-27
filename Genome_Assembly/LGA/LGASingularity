@@ -3,25 +3,25 @@ Bootstrap: docker
 From: continuumio/miniconda3
 
 %files
-    LQTQ.yml
-    FlyeAss.yml
-    Polishing.yml
-    QAssembly.yml
-    trim.py
-    nanoqc.py
-    FlyeAssGenie.py
-    Polishing.py
-    QAssembly.py
-    run_BUSCO.py
+    envs/LQTQ.yml
+    envs/FlyeAss.yml
+    envs/Polishing.yml
+    envs/QAssembly.yml
+    scripts/trim.py
+    scripts/nanoqc.py
+    scripts/FlyeAssGenie.py
+    scripts/Polishing.py
+    scripts/QAssembly.py
+    scripts/run_BUSCO.py
     BUSCOconfig.ini
-    LGASnakefile
-    config
+    Snakefile
+    config.yaml
 
 %environment
-    PATH=/opt/conda/envs/$(head -1 /LQTQ.yml | cut -d' ' -f2)/bin:$PATH
-    PATH=/opt/conda/envs/$(head -1 /FlyeAss.yml | cut -d' ' -f2)/bin:$PATH 
-    PATH=/opt/conda/envs/$(head -1 /Polishing.yml | cut -d' ' -f2)/bin:$PATH
-    PATH=/opt/conda/envs/$(head -1 /QAssembly.yml | cut -d' ' -f2)/bin:$PATH
+    PATH=/opt/conda/envs/$(head -1 envs/LQTQ.yml | cut -d' ' -f2)/bin:$PATH
+    PATH=/opt/conda/envs/$(head -1 envs/FlyeAss.yml | cut -d' ' -f2)/bin:$PATH 
+    PATH=/opt/conda/envs/$(head -1 envs/Polishing.yml | cut -d' ' -f2)/bin:$PATH
+    PATH=/opt/conda/envs/$(head -1 envs/QAssembly.yml | cut -d' ' -f2)/bin:$PATH
     export PATH=" miniconda3/pkgs/augustus-3.1-0/bin:$PATH"
     export PATH=" miniconda3/pkgs/augustus-3.1-0/scripts:$PATH"
     export AUGUSTUS_CONFIG_PATH="config/"
@@ -31,22 +31,22 @@ From: continuumio/miniconda3
     apt-get install nano
     echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc
 
-    /opt/conda/bin/conda env create -f LQTQ.yml  
-    /opt/conda/bin/conda env create -f FlyeAss.yml
-    /opt/conda/bin/conda env create -f Polishing.yml
-    /opt/conda/bin/conda env create -f QAssembly.yml
+    /opt/conda/bin/conda env create -f envs/LQTQ.yml  
+    /opt/conda/bin/conda env create -f envs/FlyeAss.yml
+    /opt/conda/bin/conda env create -f envs/Polishing.yml
+    /opt/conda/bin/conda env create -f envs/QAssembly.yml
 
-    echo "source activate $(head -1 LQTQ.yml | cut -d' ' -f2)" > ~/.bashrc
-    echo "source activate $(head -1 FlyeAss.yml | cut -d' ' -f2)" > ~/.bashrc 
-    echo "source activate $(head -1 Polishing.yml | cut -d' ' -f2)" > ~/.bashrc
-    echo "source activate $(head -1 QAssembly.yml | cut -d' ' -f2)" > ~/.bashrc
+    echo "source activate $(head -1 envs/LQTQ.yml | cut -d' ' -f2)" > ~/.bashrc
+    echo "source activate $(head -1 envs/FlyeAss.yml | cut -d' ' -f2)" > ~/.bashrc 
+    echo "source activate $(head -1 envs/Polishing.yml | cut -d' ' -f2)" > ~/.bashrc
+    echo "source activate $(head -1 envs/QAssembly.yml | cut -d' ' -f2)" > ~/.bashrc
 
 
 %runscript
     cp -R /config .
     source activate /opt/conda/envs/LQTQ
-    snakemake -j --snakefile /LGASnakefile --use-conda --quiet --nolock --keep-going --force-use-threads
-    snakemake -j --snakefile /LGASnakefile --dag | dot -Tpdf > DAG.pdf
-    snakemake -j --snakefile /LGASnakefile --summary > Summary.txt
+    snakemake -j --snakefile /Snakefile --use-conda --quiet --nolock --keep-going --force-use-threads
+    snakemake -j --snakefile /Snakefile --dag | dot -Tpdf > DAG.pdf
+    snakemake -j --snakefile /Snakefile --summary > Summary.txt
     rm -R config
     rm -R tmp
